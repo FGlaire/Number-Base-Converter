@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Universal Base Converter</title>
+    <style>
+        :root {
+            --dark-bg: #121212;
+            --dark-surface: #1E1E1E;
+            --primary-accent: #BB86FC;
+            --secondary-accent: #03DAC6;
+            --text-color: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .converter-container {
+            background-color: var(--dark-surface);
+            border-radius: 12px;
+            padding: 30px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            animation: fade-in 0.5s ease-out;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-accent);
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        select, input {
+            flex: 1;
+            padding: 10px;
+            background-color: var(--dark-bg);
+            border: 1px solid var(--primary-accent);
+            color: var(--text-color);
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--secondary-accent);
+            box-shadow: 0 0 0 3px rgba(3, 218, 198, 0.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-accent);
+            color: var(--dark-bg);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background-color: var(--secondary-accent);
+            transform: scale(1.02);
+        }
+
+        #result {
+            margin-top: 20px;
+            background-color: var(--dark-bg);
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: bold;
+            color: var(--secondary-accent);
+            animation: slide-up 0.4s ease-out;
+        }
+
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slide-up {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="converter-container">
+        <h1>Universal Base Converter</h1>
+        
+        <div class="input-group">
+            <select id="fromBase">
+                <option value="2">Binary</option>
+                <option value="8">Octal</option>
+                <option value="10" selected>Decimal</option>
+                <option value="16">Hexadecimal</option>
+            </select>
+            <input type="text" id="inputNumber" placeholder="Enter number">
+        </div>
+        
+        <div class="input-group">
+            <select id="toBase">
+                <option value="2">Binary</option>
+                <option value="8">Octal</option>
+                <option value="10">Decimal</option>
+                <option value="16" selected>Hexadecimal</option>
+            </select>
+        </div>
+        
+        <button onclick="convertBase()">Convert</button>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function convertBase() {
+            const input = document.getElementById('inputNumber').value.toUpperCase();
+            const fromBase = parseInt(document.getElementById('fromBase').value);
+            const toBase = parseInt(document.getElementById('toBase').value);
+            const resultElement = document.getElementById('result');
+
+            try {
+                // Validate input based on base
+                const regex = {
+                    2: /^[01]+$/,
+                    8: /^[0-7]+$/,
+                    10: /^[0-9]+$/,
+                    16: /^[0-9A-F]+$/
+                };
+
+                if (!regex[fromBase].test(input)) {
+                    throw new Error('Invalid input for selected base');
+                }
+
+                // Convert to decimal first
+                const decimal = parseInt(input, fromBase);
+
+                // Convert decimal to target base
+                let result;
+                switch(toBase) {
+                    case 2: result = decimal.toString(2); break;
+                    case 8: result = decimal.toString(8); break;
+                    case 10: result = decimal.toString(10); break;
+                    case 16: result = decimal.toString(16).toUpperCase(); break;
+                }
+
+                resultElement.textContent = `Result: ${result}`;
+                resultElement.style.animation = 'none';
+                void resultElement.offsetWidth; // Trigger reflow
+                resultElement.style.animation = 'slide-up 0.4s ease-out';
+            } catch(error) {
+                resultElement.textContent = `Error: ${error.message}`;
+                resultElement.style.color = 'red';
+            }
+        }
+    </script>
+</body>
+</html>
