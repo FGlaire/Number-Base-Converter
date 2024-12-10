@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Universal Base Converter</title>
     <style>
         :root {
@@ -27,6 +28,7 @@
             align-items: center;
             min-height: 100vh;
             line-height: 1.6;
+            padding: 15px;
         }
 
         .converter-container {
@@ -43,23 +45,36 @@
             text-align: center;
             color: var(--primary-accent);
             margin-bottom: 20px;
-            font-size: 2rem;
+            font-size: 1.8rem;
         }
 
         .input-group {
             display: flex;
+            flex-direction: column;
             gap: 10px;
             margin-bottom: 15px;
         }
 
+        .input-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        label {
+            color: var(--secondary-accent);
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+
         select, input {
-            flex: 1;
-            padding: 10px;
+            width: 100%;
+            padding: 12px;
             background-color: var(--dark-bg);
             border: 1px solid var(--primary-accent);
             color: var(--text-color);
             border-radius: 6px;
             transition: all 0.3s ease;
+            font-size: 1rem;
         }
 
         select:focus, input:focus {
@@ -77,6 +92,8 @@
             border-radius: 6px;
             cursor: pointer;
             transition: all 0.3s ease;
+            font-size: 1rem;
+            margin-top: 10px;
         }
 
         button:hover {
@@ -93,6 +110,32 @@
             font-weight: bold;
             color: var(--secondary-accent);
             animation: slide-up 0.4s ease-out;
+            word-break: break-all;
+        }
+
+        @media screen and (max-width: 480px) {
+            .converter-container {
+                padding: 20px;
+                margin: 0;
+                border-radius: 8px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .input-row {
+                flex-direction: column;
+            }
+
+            select, input {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+
+            button {
+                font-size: 0.9rem;
+            }
         }
 
         @keyframes fade-in {
@@ -111,16 +154,20 @@
         <h1>Universal Base Converter</h1>
         
         <div class="input-group">
-            <select id="fromBase">
-                <option value="2">Binary</option>
-                <option value="8">Octal</option>
-                <option value="10" selected>Decimal</option>
-                <option value="16">Hexadecimal</option>
-            </select>
-            <input type="text" id="inputNumber" placeholder="Enter number">
+            <label for="fromBase">From Base</label>
+            <div class="input-row">
+                <select id="fromBase">
+                    <option value="2">Binary</option>
+                    <option value="8">Octal</option>
+                    <option value="10" selected>Decimal</option>
+                    <option value="16">Hexadecimal</option>
+                </select>
+                <input type="text" id="inputNumber" placeholder="Enter number">
+            </div>
         </div>
         
         <div class="input-group">
+            <label for="toBase">To Base</label>
             <select id="toBase">
                 <option value="2">Binary</option>
                 <option value="8">Octal</option>
@@ -167,6 +214,7 @@
                 }
 
                 resultElement.textContent = `Result: ${result}`;
+                resultElement.style.color = 'var(--secondary-accent)';
                 resultElement.style.animation = 'none';
                 void resultElement.offsetWidth; // Trigger reflow
                 resultElement.style.animation = 'slide-up 0.4s ease-out';
